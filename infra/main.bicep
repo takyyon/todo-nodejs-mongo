@@ -24,6 +24,7 @@ param logAnalyticsName string = ''
 param resourceGroupName string = ''
 param webServiceName string = ''
 param apimServiceName string = ''
+param resourceGroupTags string = ''
 
 @description('Flag to use Azure API Management to mediate the calls between the Web frontend and the backend API')
 param useAPIM bool = false
@@ -39,7 +40,7 @@ var tags = { 'azd-env-name': environmentName }
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: !empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${environmentName}'
   location: location
-  tags: tags
+  tags: tags: union(empty(resourceGroupTags) ? {} : json(resourceGroupTags), tags)
 }
 
 // The application frontend
